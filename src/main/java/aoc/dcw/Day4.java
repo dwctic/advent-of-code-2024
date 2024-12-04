@@ -14,24 +14,27 @@ public class Day4 {
     String mas = "MAS";
 
     public void run() throws IOException {
+
         lines = IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream("day4.txt"), Charset.defaultCharset()).split("\n");
         int foundXmas = 0;
         int foundMas = 0;
+
         for(int y=0;y<length;y++){
             for(int x=0;x<length;x++){
 
-                //Any direction
-                for(int yd=-1;yd<=1;yd++){
-                    for(int xd=-1;xd<=1;xd++){
-                        if(searchXmas(x,y,xd,yd,0)) foundXmas ++;
+                // Search in all directions starting from X
+                for (int yd = -1; yd <= 1; yd++) {
+                    for (int xd = -1; xd <= 1; xd++) {
+                        if(searchXmas(x,y,0,xd,yd)) foundXmas ++;
                     }
                 }
 
-                // Look for diagonals only
-                if( (searchMas(x,y,1,1,1,1) && searchMas(x,y,1,-1,-1,-1) ) || searchMas(x,y,1,1,1,-1) && searchMas(x,y,1,-1,-1,1) ) {
-                    // SE diagonal
-                    if((searchMas(x,y,1,-1,1,1) && searchMas(x,y,1,1,-1,-1) || searchMas(x,y,1,-1,1,-1) && searchMas(x,y,1,1,-1,1)  )) {
-                        // SW diagonal
+                // Look for diagonals only, starting from 'A' index and going out
+                int startIndex = 1;
+                if( (searchMas(x,y,startIndex,1,1,1) && searchMas(x,y,startIndex,-1,-1,-1) ) || searchMas(x,y,startIndex,1,1,-1) && searchMas(x,y,startIndex,-1,-1,1) ) {
+                    // Found SE diagonal
+                    if((searchMas(x,y,startIndex,-1,1,1) && searchMas(x,y,startIndex,1,-1,-1) || searchMas(x,y,startIndex,-1,1,-1) && searchMas(x,y,startIndex,1,-1,1)  )) {
+                        // Found SW diagonal
                         foundMas++;
                     }
                 }
@@ -42,18 +45,20 @@ public class Day4 {
         System.out.println("foundMas: "+foundMas);
     }
 
-    boolean searchXmas(int x, int y, int xd, int yd, int i) {
-        if(i == xmas.length()) return true;
-        else if(y > -1 && y< 140 && x >-1 && x <140 && lines[y].charAt(x) == xmas.charAt(i)) {
-            return searchXmas(x + xd, y +yd,xd,yd,i+1);
+    // Recursive search in a specific direction
+    boolean searchXmas(int x, int y, int charIndex, int xDir, int yDir) {
+        if(charIndex == xmas.length()) return true;
+        else if (y > -1 && y < length && x > -1 && x < length && lines[y].charAt(x) == xmas.charAt(charIndex)) {
+            return searchXmas(x + xDir, y + yDir, charIndex + 1, xDir, yDir);
         }
         else return false;
     }
 
-    boolean searchMas(int x, int y, int i,int xd, int yd,  int id) {
-        if(i == mas.length() || i == -1) return true;
-        else if (y > -1 && y < 140 && x > -1 && x < 140 && lines[y].charAt(x) == mas.charAt(i)) {
-            return searchMas(x + xd, y + yd, i + id, xd, yd, id);
+    // Recursive search in a specific x,y, and character index direction
+    boolean searchMas(int x, int y, int charIndex,int xDir, int yDir,  int charDir) {
+        if(charIndex == mas.length() || charIndex == -1) return true;
+        else if (y > -1 && y < length && x > -1 && x < length && lines[y].charAt(x) == mas.charAt(charIndex)) {
+            return searchMas(x + xDir, y + yDir, charIndex + charDir, xDir, yDir, charDir);
         }
         else return false;
     }
