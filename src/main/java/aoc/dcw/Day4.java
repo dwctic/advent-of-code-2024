@@ -19,11 +19,15 @@ public class Day4 {
         int foundMas = 0;
         for(int y=0;y<length;y++){
             for(int x=0;x<length;x++){
+
+                //Any direction
                 for(int yd=-1;yd<=1;yd++){
                     for(int xd=-1;xd<=1;xd++){
                         if(searchXmas(x,y,xd,yd,0)) foundXmas ++;
                     }
                 }
+
+                // Look for diagonals only
                 if( (searchMas(x,y,1,1,1,1) && searchMas(x,y,1,-1,-1,-1) ) || searchMas(x,y,1,1,1,-1) && searchMas(x,y,1,-1,-1,1) ) {
                     // SE diagonal
                     if((searchMas(x,y,1,-1,1,1) && searchMas(x,y,1,1,-1,-1) || searchMas(x,y,1,-1,1,-1) && searchMas(x,y,1,1,-1,1)  )) {
