@@ -26,7 +26,7 @@ public class Day5 {
 
     public void run() throws IOException {
 
-        lines = List.of(IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream("day5.txt"), Charset.defaultCharset()).split("\n+"));
+        lines = List.of(IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream("day5.txt"), Charset.defaultCharset()).split("\n"));
         int divide = lines.indexOf("\r");
 
         // Create the graph of page orders
@@ -71,10 +71,12 @@ public class Day5 {
 
     public static class GraphNode {
         final Integer value;
-        final Set<GraphNode> before = new HashSet<>(); // This node must come before
+        final Set<GraphNode> before = new HashSet<>(); // This node must come before these other nodes
+        // Don't need to track the "after" nodes since we're assuming there are no invalid rules
         public GraphNode(Integer value) {
             this.value = value;
         }
+        // Try to find the value in this node directly or in any related nodes
         public boolean isBefore(int i,List<Integer> includeOnly){
             return before.stream().filter(g -> includeOnly.contains(g.value)).anyMatch(b -> b.value == i || b.isBefore(i, includeOnly));
         }
