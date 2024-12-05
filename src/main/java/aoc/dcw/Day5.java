@@ -52,7 +52,7 @@ public class Day5 {
         for(List<Integer> pages : updatePages) {
             List<Integer> sorted = new ArrayList<>(pages);
             // Comparator just checks to see if one page is before the other in the graph, limiting the scope to the current page list
-            sorted.sort((i0,i1) -> Objects.equals(i0, i1) ? 0 : graph.get(i0).isBefore(i1, pages) ? -1 : 1);
+            sorted.sort((i0,i1) -> Objects.equals(i0, i1) ? 0 : graph.get(i0).isAfter(i1, pages) ? -1 : 1);
             int middle = sorted.get(sorted.size()/2);
             if(pages.equals(sorted)) orderedMiddleSum += middle;
             else unorderedMiddleSum += middle;
@@ -69,6 +69,7 @@ public class Day5 {
         beforeNode.before.add(afterNode);
     }
 
+    // Represents a single page and all the pages that it must come before
     public static class GraphNode {
         final Integer value;
         final Set<GraphNode> before = new HashSet<>(); // This node must come before these other nodes
@@ -76,9 +77,9 @@ public class Day5 {
         public GraphNode(Integer value) {
             this.value = value;
         }
-        // Try to find the value in this node directly or in any related nodes
-        public boolean isBefore(int i,List<Integer> includeOnly){
-            return before.stream().filter(g -> includeOnly.contains(g.value)).anyMatch(b -> b.value == i || b.isBefore(i, includeOnly));
+        // returns true if this node must come after the page at i
+        public boolean isAfter(int i, List<Integer> includeOnly){
+            return before.stream().filter(g -> includeOnly.contains(g.value)).anyMatch(b -> b.value == i || b.isAfter(i, includeOnly));
         }
     }
 }
