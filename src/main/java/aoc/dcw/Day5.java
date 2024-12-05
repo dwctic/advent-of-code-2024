@@ -16,6 +16,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * General solution is to create a graph of page nodes that link to the nodes that must come before it. Then sort
+ * the page lists by searching the graph to see if one page must come before another.
+ */
 public class Day5 {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -43,7 +47,7 @@ public class Day5 {
         for (List<Integer> pages : updatePages) {
             List<Integer> sorted = new ArrayList<>(pages);
             // Comparator just checks to see if one page is before the other in the graph, limiting the scope to the current page list
-            sorted.sort((i0, i1) -> Objects.equals(i0, i1) ? 0 : pageGraphNodes.get(i0).isAfter(i1, pages) ? -1 : 1);
+            sorted.sort((i0, i1) -> Objects.equals(i0, i1) ? 0 : pageGraphNodes.get(i0).isBefore(i1, pages) ? -1 : 1);
             int middle = sorted.get(sorted.size() / 2);
             if (pages.equals(sorted)) orderedMiddleSum += middle;
             else unorderedMiddleSum += middle;
@@ -57,22 +61,22 @@ public class Day5 {
         logger.info("parsing rule: {}", rule);
         PageGraphNode beforeNode = pageGraphNodes.computeIfAbsent(rule.get(0), PageGraphNode::new);
         PageGraphNode afterNode = pageGraphNodes.computeIfAbsent(rule.get(1), PageGraphNode::new);
-        beforeNode.before.add(afterNode);
+        beforeNode.after.add(afterNode);
     }
 
-    // Represents a single page and all the pages that it must come before
+    // Represents a single page and all the pages that must be after it
     public static class PageGraphNode {
         final Integer value;
-        final Set<PageGraphNode> before = new HashSet<>(); // This node must come before these other nodes
+        final Set<PageGraphNode> after = new HashSet<>(); // These nodes must come after this node
 
         // Don't need to track the "after" nodes since we're assuming there are no invalid rules
         public PageGraphNode(Integer value) {
             this.value = value;
         }
 
-        // returns true if this node must come after the page at i
-        public boolean isAfter(int i, List<Integer> includeOnly) {
-            return before.stream().filter(g -> includeOnly.contains(g.value)).anyMatch(b -> b.value == i || b.isAfter(i, includeOnly));
+        // returns true if this node must come before the node at i
+        public boolean isBefore(int i, List<Integer> includeOnly) {
+            return after.stream().filter(g -> includeOnly.contains(g.value)).anyMatch(b -> b.value == i || b.isBefore(i, includeOnly));
         }
     }
 }
