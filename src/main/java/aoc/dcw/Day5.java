@@ -22,7 +22,7 @@ public class Day5 {
 
     List<String> lines;
     List<List<Integer>> updatePages;
-    Map<Integer,GraphNode> graph = new HashMap<>();
+    Map<Integer, PageGraphNode> pageGraphNodes = new HashMap<>();
 
     public void run() throws IOException {
 
@@ -30,18 +30,9 @@ public class Day5 {
         int divide = lines.indexOf("\r");
 
         // Create the graph of page orders
-        lines.subList(0,divide)
-                .stream()
-                .map(String::trim)
-                .map(s -> List.of(s.trim().split("\\|")))
-                .map(l -> l.stream().map(Integer::valueOf).toList())
-                .forEach(this::parseRule);
+        lines.subList(0, divide).stream().map(String::trim).map(s -> List.of(s.trim().split("\\|"))).map(l -> l.stream().map(Integer::valueOf).toList()).forEach(this::parseRule);
 
-        updatePages = lines.subList(divide+1,lines.size())
-                .stream()
-                .map(String::trim)
-                .map(s -> List.of(s.split(",")))
-                .map(l -> l.stream().map(Integer::valueOf).toList()).toList();
+        updatePages = lines.subList(divide + 1, lines.size()).stream().map(String::trim).map(s -> List.of(s.split(","))).map(l -> l.stream().map(Integer::valueOf).toList()).toList();
 
         logger.info("done parsing rules");
 
@@ -49,36 +40,38 @@ public class Day5 {
         int orderedMiddleSum = 0;
 
         // Sort all page lists and sum based on whether the list was already sorted or not
-        for(List<Integer> pages : updatePages) {
+        for (List<Integer> pages : updatePages) {
             List<Integer> sorted = new ArrayList<>(pages);
             // Comparator just checks to see if one page is before the other in the graph, limiting the scope to the current page list
-            sorted.sort((i0,i1) -> Objects.equals(i0, i1) ? 0 : graph.get(i0).isAfter(i1, pages) ? -1 : 1);
-            int middle = sorted.get(sorted.size()/2);
-            if(pages.equals(sorted)) orderedMiddleSum += middle;
+            sorted.sort((i0, i1) -> Objects.equals(i0, i1) ? 0 : pageGraphNodes.get(i0).isAfter(i1, pages) ? -1 : 1);
+            int middle = sorted.get(sorted.size() / 2);
+            if (pages.equals(sorted)) orderedMiddleSum += middle;
             else unorderedMiddleSum += middle;
         }
 
-        logger.info("unorderedMiddleSum: {}",unorderedMiddleSum);
+        logger.info("unorderedMiddleSum: {}", unorderedMiddleSum);
         logger.info("orderedMiddleSum: {}", orderedMiddleSum);
     }
 
     public void parseRule(List<Integer> rule) {
-        logger.info("parsing rule: {}",rule);
-        GraphNode beforeNode = graph.computeIfAbsent(rule.get(0),GraphNode::new);
-        GraphNode afterNode = graph.computeIfAbsent(rule.get(1),GraphNode::new);
+        logger.info("parsing rule: {}", rule);
+        PageGraphNode beforeNode = pageGraphNodes.computeIfAbsent(rule.get(0), PageGraphNode::new);
+        PageGraphNode afterNode = pageGraphNodes.computeIfAbsent(rule.get(1), PageGraphNode::new);
         beforeNode.before.add(afterNode);
     }
 
     // Represents a single page and all the pages that it must come before
-    public static class GraphNode {
+    public static class PageGraphNode {
         final Integer value;
-        final Set<GraphNode> before = new HashSet<>(); // This node must come before these other nodes
+        final Set<PageGraphNode> before = new HashSet<>(); // This node must come before these other nodes
+
         // Don't need to track the "after" nodes since we're assuming there are no invalid rules
-        public GraphNode(Integer value) {
+        public PageGraphNode(Integer value) {
             this.value = value;
         }
+
         // returns true if this node must come after the page at i
-        public boolean isAfter(int i, List<Integer> includeOnly){
+        public boolean isAfter(int i, List<Integer> includeOnly) {
             return before.stream().filter(g -> includeOnly.contains(g.value)).anyMatch(b -> b.value == i || b.isAfter(i, includeOnly));
         }
     }
