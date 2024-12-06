@@ -91,9 +91,7 @@ public class Day6 {
         return loop ? State.LOOP : State.EXIT;
     }
 
-    public enum State {
-        EXIT, LOOP;
-    }
+    public enum State {EXIT, LOOP}
 
     public static class Map {
         final char[][] map;
