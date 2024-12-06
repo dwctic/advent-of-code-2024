@@ -68,16 +68,15 @@ public class Day6 {
 
     public State dropObstacleAndRun(Point newObs, Guard guard) {
         logger.info("Dropping obstacle at {}", newObs);
-        map.obs(newObs);
+        map.set(newObs, OBS);
         State state = runGuard(guard);
-        map.clear(newObs);
+        map.set(newObs, NEW);
         return state;
     }
 
     public State runGuard(Guard guard) {
         logger.info("Running Guard at: {}", guard.current);
-        //map.flag(guard.current);
-        boolean inside = true;
+        boolean inside;
         boolean loop = false;
         PointAndDir next;
         do {
@@ -88,7 +87,7 @@ public class Day6 {
                 guard.setPosition(next);
             }
         } while (inside && !loop);
-        logger.info("Guard " + (loop ? "Looped" : "Left") + " at position: {} with positions {}", guard.current, guard.allPositions.size());
+        logger.info("Guard {} at position: {} with positions {}", loop ? "Looped" : "Left",guard.current, guard.allPositions.size());
         return loop ? State.LOOP : State.EXIT;
     }
 
@@ -104,11 +103,8 @@ public class Day6 {
         public char get(Point p) {
             return p.y > -1 && p.x > -1 && p.y < map.length && p.x < map[p.y].length ? map[p.y][p.x] : EOF;
         }
-        public void obs(Point p) {
-            map[p.y][p.x] = OBS;
-        }
-        public void clear(Point p) {
-            map[p.y][p.x] = NEW;
+        public void set(Point p, char c) {
+            map[p.y][p.x] = c;
         }
     }
 
