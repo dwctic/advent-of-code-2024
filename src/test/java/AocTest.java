@@ -1,6 +1,7 @@
 import aoc.dcw.Day3;
 import aoc.dcw.Day4;
 import aoc.dcw.Day5;
+import aoc.dcw.Day6;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -22,5 +23,10 @@ public class AocTest {
     @Test
     public void day5() throws IOException {
         new Day5().run();
+    }
+
+    @Test
+    public void day6() throws IOException {
+        new Day6().run();
     }
 }
