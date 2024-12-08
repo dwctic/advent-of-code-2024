@@ -1,6 +1,7 @@
 package aoc.dcw;
 
 import aoc.AoC;
+import aoc.dcw.util.CharacterMap;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,39 +23,48 @@ public class Day6 {
     static char OLD = 'X';
     static char NEW = '.';
 
-    Map map;
+    CharacterMap map;
     PointAndDir guardStart;
+    Guard guard;
 
     public static void main(String[] args) throws IOException {
         new Day6().run();
     }
 
-    public void run() throws IOException {
-
-        // Turn the file into a 2D array
+    public Day6() throws IOException {
         List<String> lines = List.of(IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream("day6.txt"), Charset.defaultCharset()).split("\n"));
+        // Object to manage map access
+        map = new CharacterMap(lines);
         int y = 0;
-        char[][] mapAr = new char[lines.size()][];
-        for (char[] row : lines.stream().map(String::trim).map(String::toCharArray).toList()) {
-            mapAr[y] = row;
+        for (char[] row : map.map) {
+           // mapAr[y] = row;
             for (int x = 0; x < row.length; x++) {
                 char c = row[x];
                 if (c != NEW && c != OBS) {
                     guardStart = new PointAndDir(x, y, c);
+                    break;
                 }
             }
             y++;
         }
-        // Create object to manage map access
-        map = new Map(mapAr);
-        // Create initial guard and run
-        Guard guard = new Guard(guardStart.x, guardStart.y, guardStart.dirChar);
-        runGuard(guard);
-        // Find loops using list of all positions from first run
-        runPart2(guard.allPositions);
     }
 
-    public void runPart2(Set<Point> obstaclePositions) {
+    public void run() throws IOException {
+        part1();
+        part2();
+    }
+
+    public int part1() {
+        guard = new Guard(guardStart.x, guardStart.y, guardStart.dirChar);
+        runGuard(guard);
+        return guard.allPositions.size();
+    }
+
+    public int part2() {
+        return runPart2(guard.allPositions);
+    }
+
+    public int runPart2(Set<Point> obstaclePositions) {
         obstaclePositions.remove(guardStart);
         Guard g;
         int loops = 0;
@@ -64,6 +74,7 @@ public class Day6 {
             if (state == State.LOOP) loops++;
         }
         logger.info("loops: {}", loops);
+        return loops;
     }
 
     public State dropObstacleAndRun(Point newObs, Guard guard) {
@@ -93,7 +104,7 @@ public class Day6 {
 
     public enum State {EXIT, LOOP}
 
-    public static class Map {
+    /*public static class Map {
         final char[][] map;
         public Map(char[][] map) {
             this.map = map;
@@ -104,7 +115,7 @@ public class Day6 {
         public void set(Point p, char c) {
             map[p.y][p.x] = c;
         }
-    }
+    }*/
 
     // Class that understands how to move and turn the guard
     public class Guard {
