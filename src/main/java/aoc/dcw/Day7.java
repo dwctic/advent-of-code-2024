@@ -1,33 +1,28 @@
 package aoc.dcw;
 
-import aoc.AoC;
-import org.apache.commons.io.IOUtils;
+import aoc.dcw.util.Utilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Day7 {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new Day7().run();
     }
 
-    public void run() throws IOException {
+    public void run()  {
         //run("day7control.txt");
         run("day7.txt");
     }
 
-    public void run(String file) throws IOException {
-        List<String> lines = List.of(IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream(file), Charset.defaultCharset()).split("\n"));
+    public void run(String file) {
+        List<String> lines = Utilities.getLines(file);
         long sum = lines.stream().map(this::testLine).mapToLong(i -> i).sum();
         logger.info("sum: {}",sum);
     }

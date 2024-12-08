@@ -1,10 +1,6 @@
 package aoc.dcw;
 
-import aoc.AoC;
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
+import aoc.dcw.util.Utilities;
 
 public class Day4 {
 
@@ -13,9 +9,10 @@ public class Day4 {
     String xmas = "XMAS";
     String mas = "MAS";
 
-    public void run() throws IOException {
+    public void run() {
 
-        lines = IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream("day4.txt"), Charset.defaultCharset()).split("\n");
+        //lines = IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream("day4.txt"), Charset.defaultCharset()).split("\n");
+        lines = Utilities.getLines("day4.txt").toArray(new String[0]);
         int foundXmas = 0;
         int foundMas = 0;
 

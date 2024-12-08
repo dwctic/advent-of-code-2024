@@ -1,16 +1,12 @@
 package aoc.dcw;
 
-import aoc.AoC;
 import aoc.dcw.util.CharacterMap;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.Point;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,18 +18,12 @@ public class Day8 {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     CharacterMap map;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new Day8("day8control1.txt");
     }
 
     public Day8(String file) {
-        List<String> lines = null;
-        try {
-            lines = List.of(IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream(file), Charset.defaultCharset()).split("\n"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        map = new CharacterMap(lines);
+        map = new CharacterMap(file);
     }
 
     public int part1() {

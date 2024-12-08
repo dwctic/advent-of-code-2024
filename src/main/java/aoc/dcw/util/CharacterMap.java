@@ -4,25 +4,24 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages a 2D map of chars
+ */
 public class CharacterMap {
 
     public static char EOF = (char) -1;
     public final char[][] map;
 
+    public CharacterMap(String resource) {
+        this(Utilities.getLines(resource));
+    }
     public CharacterMap(List<String> lines) {
         int y = 0;
         char[][] mapAr = new char[lines.size()][];
         for (char[] row : lines.stream().map(String::trim).map(String::toCharArray).toList()) {
             mapAr[y++] = row;
-           /* for (int x = 0; x < row.length; x++) {
-                char c = row[x];
-            }*/
-            //y++;
         }
         this.map = mapAr;
-    }
-    public CharacterMap(char[][] map) {
-        this.map = map;
     }
     public char get(Point p) {
         return p.y > -1 && p.x > -1 && p.y < map.length && p.x < map[p.y].length ? map[p.y][p.x] : EOF;

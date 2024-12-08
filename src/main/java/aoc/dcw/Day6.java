@@ -1,17 +1,12 @@
 package aoc.dcw;
 
-import aoc.AoC;
 import aoc.dcw.util.CharacterMap;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.Point;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.nio.charset.Charset;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -27,14 +22,12 @@ public class Day6 {
     PointAndDir guardStart;
     Guard guard;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new Day6().run();
     }
 
-    public Day6() throws IOException {
-        List<String> lines = List.of(IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream("day6.txt"), Charset.defaultCharset()).split("\n"));
-        // Object to manage map access
-        map = new CharacterMap(lines);
+    public Day6() {
+        map = new CharacterMap("day6.txt");
         int y = 0;
         for (char[] row : map.map) {
            // mapAr[y] = row;
@@ -49,7 +42,7 @@ public class Day6 {
         }
     }
 
-    public void run() throws IOException {
+    public void run() {
         part1();
         part2();
     }
@@ -103,19 +96,6 @@ public class Day6 {
     }
 
     public enum State {EXIT, LOOP}
-
-    /*public static class Map {
-        final char[][] map;
-        public Map(char[][] map) {
-            this.map = map;
-        }
-        public char get(Point p) {
-            return p.y > -1 && p.x > -1 && p.y < map.length && p.x < map[p.y].length ? map[p.y][p.x] : EOF;
-        }
-        public void set(Point p, char c) {
-            map[p.y][p.x] = c;
-        }
-    }*/
 
     // Class that understands how to move and turn the guard
     public class Guard {

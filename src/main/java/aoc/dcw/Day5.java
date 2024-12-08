@@ -1,13 +1,10 @@
 package aoc.dcw;
 
-import aoc.AoC;
-import org.apache.commons.io.IOUtils;
+import aoc.dcw.util.Utilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,9 +25,9 @@ public class Day5 {
     List<List<Integer>> updatePages;
     Map<Integer, PageGraphNode> pageGraphNodes = new HashMap<>();
 
-    public void run() throws IOException {
+    public void run() {
 
-        lines = List.of(IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream("day5.txt"), Charset.defaultCharset()).split("\n"));
+        lines = Utilities.getLines("day5.txt");
         int divide = lines.indexOf("\r");
 
         // Create the graph of page orders
