@@ -1,6 +1,6 @@
 package aoc.dcw.util;
 
-import aoc.AoC;
+import aoc.dcw.AoCDay;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class Utilities {
 
     public static String getString(String resource) {
         try {
-            return IOUtils.toString(AoC.class.getClassLoader().getResourceAsStream(resource), Charset.defaultCharset());
+            return IOUtils.toString(AoCDay.class.getClassLoader().getResourceAsStream(resource), Charset.defaultCharset());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

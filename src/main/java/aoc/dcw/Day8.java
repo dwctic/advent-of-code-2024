@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public class Day8 {
+public class Day8 extends AoCDay {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     CharacterMap map;
 
     public static void main(String[] args) {
@@ -39,7 +39,7 @@ public class Day8 {
               part1AntiNodes.addAll(anti1);
           }
         }
-        logger.info("part 1 total anti: {}",part1AntiNodes.size());
+        logger.info("part 1: {}",part1AntiNodes.size());
         return part1AntiNodes.size();
 
     }
@@ -51,12 +51,12 @@ public class Day8 {
             if(CharUtils.isAsciiAlphanumeric(c)) {
                 Antenna ant = new Antenna(c,map.find(c));
                 Set<Point> anti2 = findAntiNodes(ant, map, true);
-                logger.info("ant {} part2: {}", c, anti2.size());
+                logger.debug("ant {} part2: {}", c, anti2.size());
                 part2AntiNodes.addAll(anti2);
 
             }
         }
-        logger.info("total anti: {}",part2AntiNodes.size());
+        logger.info("part 2: {}",part2AntiNodes.size());
         return part2AntiNodes.size();
     }
 

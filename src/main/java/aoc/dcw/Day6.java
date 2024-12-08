@@ -10,9 +10,10 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Day6 {
+public class Day6 extends AoCDay {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     public static char EOF = (char) -1;
     static char OBS = '#';
     static char OLD = 'X';

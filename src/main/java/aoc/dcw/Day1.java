@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class Day1 {
+public class Day1 extends AoCDay {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
 

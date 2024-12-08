@@ -2,7 +2,7 @@ package aoc.dcw;
 
 import aoc.dcw.util.Utilities;
 
-public class Day4 {
+public class Day4 extends AoCDay {
 
     String[] lines;
     int length = 140;

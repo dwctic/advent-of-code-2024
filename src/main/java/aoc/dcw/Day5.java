@@ -17,7 +17,7 @@ import java.util.Set;
  * General solution is to create a graph of page nodes that link to the nodes that must come before it. Then sort
  * the page lists by searching the graph to see if one page must come before another.
  */
-public class Day5 {
+public class Day5 extends AoCDay {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
