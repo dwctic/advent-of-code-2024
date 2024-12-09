@@ -26,7 +26,7 @@ public class Day9 {
     }
 
     public FileDisk convertInputToDisk() {
-        List<FileBlock> blocks = new ArrayList<>();
+        List<FileBlock> files = new ArrayList<>();
         int fileId = 0;
         char[] sizes = input.toCharArray();
         for (int i = 0; i < sizes.length; i++) {
@@ -36,18 +36,16 @@ public class Day9 {
                 fid = fileId++;
             }
             FileBlock b = new FileBlock(fid, size);
-            blocks.add(b);
+            files.add(b);
         }
-        return new FileDisk(blocks);
+        return new FileDisk(files);
     }
 
     // Reorder the individual blocks based on part 1 instructions
     public List<Long> reorderBlocks(FileDisk disk) {
         BlockDisk blockDisk = disk.toBlockDisk();
         List<Long> blocks = blockDisk.blocks;
-        logger.debug("reordering {}", blockDisk.blocks.size());
         int lastNonSpaceIndex = blockDisk.findLastNonSpace(blocks.size() - 1);
-        logger.debug("lastNonSpace: {}", lastNonSpaceIndex);
 
         // Start at beginning and any time we encounter a space, swap with the last non-space block
         for (int i = 0; i < blocks.size() && lastNonSpaceIndex >= i; i++) {
@@ -83,8 +81,8 @@ public class Day9 {
         return new FileDisk(files);
     }
 
-    public static String FilesToString(Stream<FileBlock> blocks) {
-        return BlocksToString(blocks.flatMap(FileBlock::toBlocks));
+    public static String FilesToString(Stream<FileBlock> files) {
+        return BlocksToString(files.flatMap(FileBlock::toBlocks));
     }
 
     public static String BlocksToString(Stream<Long> blocks) {
@@ -92,14 +90,7 @@ public class Day9 {
     }
 
     // Class to manage a list of individual blocks, regardless of the file id
-    public static class BlockDisk {
-
-        final List<Long> blocks; // each value is a file id or -1
-
-        public BlockDisk(List<Long> blocks) {
-            this.blocks = blocks;
-        }
-
+    public record BlockDisk(List<Long> blocks) {
         // find last block that is not a space
         public int findLastNonSpace(int from) {
             for (int i = from; i >= 0; i--) {
@@ -112,12 +103,15 @@ public class Day9 {
     }
 
     // Class to manage a list of contiguous file blocks
-    public static class FileDisk {
+    public record FileDisk(List<FileBlock> files) {
 
-        public final List<FileBlock> files; // each object is file / empty space + length
-
-        public FileDisk(List<FileBlock> files) {
-            this.files = files;
+        // Checksum of a list of file ids
+        public static long calcCheckSum(Stream<Long> fileIds) {
+            MutableInt blockId = new MutableInt(0);
+            return fileIds.map(id -> {
+                long bid = blockId.getAndIncrement();
+                return id == SPACE_ID ? 0 : id * bid;
+            }).reduce(Long::sum).orElseThrow();
         }
 
         // Convert the disk of files to disk of individual blocks
@@ -142,18 +136,9 @@ public class Day9 {
         public String toString() {
             return BlocksToString(files.stream().flatMap(FileBlock::toBlocks));
         }
-
-        // Checksum of a list of file ids
-        public static long calcCheckSum(Stream<Long> fileIds) {
-            MutableInt blockId = new MutableInt(0);
-            return fileIds.map(id -> {
-                long bid = blockId.getAndIncrement();
-                return id == SPACE_ID ? 0 : id * bid;
-            }).reduce(Long::sum).orElseThrow();
-        }
     }
 
-    // class to manage a contiguous length of blocks with a specific file id
+    // class to manage a list of contiguous blocks with a specific file id and specific size
     public static class FileBlock {
 
         final long fileId;
@@ -163,19 +148,15 @@ public class Day9 {
             this.fileId = fileId;
             this.size = size;
         }
-
         public Stream<Long> toBlocks() {
             return Utilities.fillStream(size,fileId);
         }
-
         public boolean isSpace() {
             return fileId == SPACE_ID;
         }
-
         public void shrink(int shrinkBy) {
             this.size = this.size - shrinkBy;
         }
-
         public String toString() {
             return StringUtils.repeat(fileId == SPACE_ID ? SPACE.charAt(0) : ("" + fileId).charAt(0), size);
         }
