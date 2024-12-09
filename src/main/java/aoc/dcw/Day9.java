@@ -19,18 +19,11 @@ public class Day9 {
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     public static final String SPACE = ".";
     public static final long SPACE_ID = -1;
-    String input;
+
+    public final String input;
 
     public Day9(String file) {
         input = Utilities.getString(file);
-    }
-
-    public static String FilesToString(Stream<FileBlock> blocks) {
-        return BlocksToString(blocks.flatMap(fb -> fb.getBlocks().stream()));
-    }
-
-    public static String BlocksToString(Stream<Long> blocks) {
-        return blocks.map(i -> i == SPACE_ID ? SPACE : i.toString()).collect(Collectors.joining());
     }
 
     public FileDisk convertInputToDisk() {
@@ -90,6 +83,15 @@ public class Day9 {
             nonSpaceFilesReverse.remove(0);
         } while (!nonSpaceFilesReverse.isEmpty());
         return new FileDisk(files);
+    }
+
+
+    public static String FilesToString(Stream<FileBlock> blocks) {
+        return BlocksToString(blocks.flatMap(fb -> fb.getBlocks().stream()));
+    }
+
+    public static String BlocksToString(Stream<Long> blocks) {
+        return blocks.map(i -> i == SPACE_ID ? SPACE : i.toString()).collect(Collectors.joining());
     }
 
     // Class to manage a list of individual blocks
