@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 
 public class Utilities {
@@ -19,5 +20,11 @@ public class Utilities {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static long[] fill(int size, long value) {
+        long[] values = new long[size];
+        Arrays.fill(values,value);
+        return values;
     }
 }
