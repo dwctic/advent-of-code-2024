@@ -43,17 +43,17 @@ public class Day9 {
 
     // Reorder the individual blocks based on part 1 instructions
     public List<Long> reorderBlocks(FileDisk disk) {
-        BlockDisk blockDisk = disk.getBlockDisk();
+        BlockDisk blockDisk = disk.toBlockDisk();
         List<Long> blocks = blockDisk.blocks;
         logger.debug("reordering {}", blockDisk.blocks.size());
-        int lastNonSpaceIndex = blockDisk.lastNonSpace(blocks.size() - 1);
+        int lastNonSpaceIndex = blockDisk.findLastNonSpace(blocks.size() - 1);
         logger.debug("lastNonSpace: {}", lastNonSpaceIndex);
 
         // Start at beginning and any time we encounter a space, swap with the last non-space block
         for (int i = 0; i < blocks.size() && lastNonSpaceIndex >= i; i++) {
             if (blocks.get(i) == SPACE_ID) {
                 Collections.swap(blocks, lastNonSpaceIndex, i);
-                lastNonSpaceIndex = blockDisk.lastNonSpace(lastNonSpaceIndex);
+                lastNonSpaceIndex = blockDisk.findLastNonSpace(lastNonSpaceIndex);
             }
         }
         return blocks;
@@ -83,9 +83,8 @@ public class Day9 {
         return new FileDisk(files);
     }
 
-
     public static String FilesToString(Stream<FileBlock> blocks) {
-        return BlocksToString(blocks.flatMap(FileBlock::getBlocks));
+        return BlocksToString(blocks.flatMap(FileBlock::toBlocks));
     }
 
     public static String BlocksToString(Stream<Long> blocks) {
@@ -102,7 +101,7 @@ public class Day9 {
         }
 
         // find last block that is not a space
-        public int lastNonSpace(int from) {
+        public int findLastNonSpace(int from) {
             for (int i = from; i >= 0; i--) {
                 if (blocks.get(i) != SPACE_ID) {
                     return i;
@@ -122,13 +121,13 @@ public class Day9 {
         }
 
         // Convert the disk of files to disk of individual blocks
-        public BlockDisk getBlockDisk() {
-            return new BlockDisk(new ArrayList<>(files.stream().flatMap(FileBlock::getBlocks).toList()));
+        public BlockDisk toBlockDisk() {
+            return new BlockDisk(new ArrayList<>(files.stream().flatMap(FileBlock::toBlocks).toList()));
         }
 
         // checksum of the current list of blocks
         public long calcCheckSum() {
-            return calcCheckSum(files.stream().flatMap(FileBlock::getBlocks));
+            return calcCheckSum(files.stream().flatMap(FileBlock::toBlocks));
         }
 
         // Find a space file that is at least a certain size
@@ -141,7 +140,7 @@ public class Day9 {
         }
 
         public String toString() {
-            return BlocksToString(files.stream().flatMap(FileBlock::getBlocks));
+            return BlocksToString(files.stream().flatMap(FileBlock::toBlocks));
         }
 
         // Checksum of a list of file ids
@@ -165,7 +164,7 @@ public class Day9 {
             this.size = size;
         }
 
-        public Stream<Long> getBlocks() {
+        public Stream<Long> toBlocks() {
             return Utilities.fillStream(size,fileId);
         }
 
