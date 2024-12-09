@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,7 +72,7 @@ public class Day9 {
             if (spaceIndex > -1 && spaceIndex < fileIndex) {
                 FileBlock space = files.get(spaceIndex);
                 // remove some space from this block
-                space.take(file.size);
+                space.shrink(file.size);
                 // move file to space
                 files.add(spaceIndex, files.remove(fileIndex));
                 // move space to end
@@ -129,7 +128,7 @@ public class Day9 {
 
         // checksum of the current list of blocks
         public long calcCheckSum() {
-            return calcCheckSum(files.stream().flatMap(fb -> Arrays.stream(Utilities.fill(fb.size, fb.fileId)).boxed()));
+            return calcCheckSum(files.stream().flatMap(FileBlock::getBlocks));
         }
 
         // Find a space file that is at least a certain size
@@ -155,6 +154,7 @@ public class Day9 {
         }
     }
 
+    // class to manage a contiguous length of blocks with a specific file id
     public static class FileBlock {
 
         final long fileId;
@@ -165,20 +165,20 @@ public class Day9 {
             this.size = size;
         }
 
-        public String toString() {
-            return StringUtils.repeat(fileId == SPACE_ID ? SPACE.charAt(0) : ("" + fileId).charAt(0), size);
-        }
-
         public Stream<Long> getBlocks() {
-            return Arrays.stream(Utilities.fill(size, fileId)).boxed();
+            return Utilities.fillStream(size,fileId);
         }
 
         public boolean isSpace() {
             return fileId == SPACE_ID;
         }
 
-        public void take(int size) {
-            this.size = this.size - size;
+        public void shrink(int shrinkBy) {
+            this.size = this.size - shrinkBy;
+        }
+
+        public String toString() {
+            return StringUtils.repeat(fileId == SPACE_ID ? SPACE.charAt(0) : ("" + fileId).charAt(0), size);
         }
     }
 }

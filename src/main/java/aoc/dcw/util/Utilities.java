@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Utilities {
 
@@ -26,5 +27,9 @@ public class Utilities {
         long[] values = new long[size];
         Arrays.fill(values,value);
         return values;
+    }
+
+    public static Stream<Long> fillStream(int size, long value) {
+        return Arrays.stream(Utilities.fill(size, value)).boxed();
     }
 }
