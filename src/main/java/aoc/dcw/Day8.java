@@ -1,11 +1,11 @@
 package aoc.dcw;
 
 import aoc.dcw.util.CharacterMap;
+import aoc.dcw.util.Point;
 import org.apache.commons.lang3.CharUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Point;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ public class Day8 extends AoCDay {
         //Set<Point> part2AntiNodes = new HashSet<>();
         for(char c=0;c<='z';c++){
           if(CharUtils.isAsciiAlphanumeric(c)) {
-              Antenna ant = new Antenna(c,map.find(c));
+              Antenna ant = new Antenna(c,map.findChar(c));
 
               Set<Point> anti1 = findAntiNodes(ant, map, false);
               logger.debug("ant {} part1: {}", c, anti1.size());
@@ -49,7 +49,7 @@ public class Day8 extends AoCDay {
         Set<Point> part2AntiNodes = new HashSet<>();
         for(char c=0;c<='z';c++){
             if(CharUtils.isAsciiAlphanumeric(c)) {
-                Antenna ant = new Antenna(c,map.find(c));
+                Antenna ant = new Antenna(c,map.findChar(c));
                 Set<Point> anti2 = findAntiNodes(ant, map, true);
                 logger.debug("ant {} part2: {}", c, anti2.size());
                 part2AntiNodes.addAll(anti2);
@@ -93,13 +93,13 @@ public class Day8 extends AoCDay {
                     an2.x -= xd;
                     an2.y -= yd;
                     //logger.info("checking an1: {}",an1);
-                    if (map.get(an1) != CharacterMap.EOF) {
+                    if (map.getChar(an1) != CharacterMap.EOF) {
                         logger.debug("{} anti node: {} between {} and {}", a.c, an1, point, p);
                         antiNodes.add(new Point(an1));
                         bothOob = false;
                     }
                     //logger.info("checking an2: {}",an2);
-                    if (map.get(an2) != CharacterMap.EOF) {
+                    if (map.getChar(an2) != CharacterMap.EOF) {
                         //logger.info("{} has anti node at: {}",c,an2);
                         logger.debug("{} anti node: {} between {} and {}", a.c, an2, point, p);
                         antiNodes.add(new Point(an2));

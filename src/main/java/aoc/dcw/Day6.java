@@ -1,10 +1,10 @@
 package aoc.dcw;
 
 import aoc.dcw.util.CharacterMap;
+import aoc.dcw.util.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Point;
 import java.lang.invoke.MethodHandles;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -73,9 +73,9 @@ public class Day6 extends AoCDay {
 
     public State dropObstacleAndRun(Point newObs, Guard guard) {
         logger.info("Dropping obstacle at {}", newObs);
-        map.set(newObs, OBS);
+        map.setChar(newObs, OBS);
         State state = runGuard(guard);
-        map.set(newObs, NEW);
+        map.setChar(newObs, NEW);
         return state;
     }
 
@@ -112,12 +112,12 @@ public class Day6 extends AoCDay {
             PointAndDir current = new PointAndDir(this.current);
             PointAndDir next = new PointAndDir(current);
             next.move();
-            char nextSpot = map.get(next);
+            char nextSpot = map.getChar(next);
             while (nextSpot == OBS && nextSpot != EOF) {
                 current.turnRight();
                 next = new PointAndDir(current);
                 next.move();
-                nextSpot = map.get(next);
+                nextSpot = map.getChar(next);
             }
             if (nextSpot == EOF) return null;
             return next;
