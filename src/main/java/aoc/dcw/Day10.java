@@ -1,6 +1,6 @@
 package aoc.dcw;
 
-import aoc.dcw.util.CharacterMap;
+import aoc.dcw.util.Map2D;
 import aoc.dcw.util.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,24 +8,21 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Day10 {
 
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static int TRAILHEAD = 0;
-    public static int TRAILEND = 9;
-    CharacterMap map;
-    //int[] dirs = new int[]{-1,0,1};
-    int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+    public static int TRAIL_HEAD = 0;
+    public static int TRAIL_END = 9;
+    public Map2D map;
 
     public Day10(String file) {
-        map = new CharacterMap(file);
+        map = new Map2D(file);
     }
 
     public int rateTrails() {
@@ -37,15 +34,14 @@ public class Day10 {
     }
 
     public int[] walkTrails() {
-        List<Point> trailheads = map.findInt(TRAILHEAD);
+        List<Point> trailheads = map.findInt(TRAIL_HEAD);
         int score = 0;
         int rating = 0;
         for (Point p : trailheads) {
             logger.debug("TRAILHEAD {}",p);
-            Set<Point> allPoints = new HashSet<>();
-            Set<Point> reachable = new HashSet<>();
             Trail start = new Trail();
-            Set<Trail> distinct = walk(reachable,allPoints, start,-1, p);
+            Set<Trail> distinct = walk(start,-1, p);
+            Set<Point> reachable = distinct.stream().map(t -> t.get(t.size()-1)).collect(Collectors.toSet());
             logger.debug("TRAILHEAD {} can reach {}",p,reachable.size());
             logger.debug("TRAILHEAD {} distinct {}",p,distinct.size());
             rating += distinct.size();
@@ -54,26 +50,22 @@ public class Day10 {
         return new int[]{score,rating};
     }
 
-    public Set<Trail> walk(Set<Point> reachable,Set<Point> walkedPoints, Trail current, int fromHeight, Point check) {
-
-        //if(walkedPoints.contains(check)) return Collections.emptySet();
+    // Recurse from each point and track the distinct trails
+    public Set<Trail> walk(Trail current, int fromHeight, Point check) {
         int height = map.getInt(check);
         if (height == fromHeight + 1) {
-            walkedPoints.add(check);
             current.add(check);
             logger.debug("walking: {} height: {} -> {}",check,fromHeight,height);
-            if (height == TRAILEND) {
-                logger.debug("found trailend at: {}",check);
-                reachable.add(check);
-                return Set.of(current);
+            if (height == TRAIL_END) return Set.of(current);
+            else {
+                Set<Trail> nextTrails = new HashSet<>();
+                for (Point next : check.cardinalDirections()) {
+                    Trail nextTrail = new Trail(current);
+                    nextTrail.add(next);
+                    nextTrails.addAll(walk(nextTrail, height, next));
+                }
+                return nextTrails;
             }
-            Set<Trail> nextTrails = new HashSet<>();
-            for (Point next : check.cardinalDirections()) {
-                Trail nextTrail = new Trail(current);
-                nextTrail.add(next);
-                nextTrails.addAll(walk(reachable,walkedPoints, nextTrail,height, next));
-            }
-            return nextTrails;
         }
         else return Collections.emptySet();
     }
@@ -82,10 +74,7 @@ public class Day10 {
         public Trail(Trail start) {
             super(start);
         }
-
         public Trail() {
-
         }
     }
-
 }

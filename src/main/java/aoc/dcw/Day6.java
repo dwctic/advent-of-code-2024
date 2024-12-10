@@ -1,6 +1,6 @@
 package aoc.dcw;
 
-import aoc.dcw.util.CharacterMap;
+import aoc.dcw.util.Map2D;
 import aoc.dcw.util.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class Day6 extends AoCDay {
     static char OLD = 'X';
     static char NEW = '.';
 
-    CharacterMap map;
+    Map2D map;
     PointAndDir guardStart;
     Guard guard;
 
@@ -28,7 +28,7 @@ public class Day6 extends AoCDay {
     }
 
     public Day6() {
-        map = new CharacterMap("day6.txt");
+        map = new Map2D("day6.txt");
         int y = 0;
         for (char[] row : map.map) {
            // mapAr[y] = row;

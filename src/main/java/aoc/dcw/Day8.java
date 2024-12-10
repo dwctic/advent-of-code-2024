@@ -1,6 +1,6 @@
 package aoc.dcw;
 
-import aoc.dcw.util.CharacterMap;
+import aoc.dcw.util.Map2D;
 import aoc.dcw.util.Point;
 import org.apache.commons.lang3.CharUtils;
 import org.slf4j.Logger;
@@ -16,14 +16,14 @@ import java.util.function.Predicate;
 public class Day8 extends AoCDay {
 
     public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    CharacterMap map;
+    Map2D map;
 
     public static void main(String[] args) {
         new Day8("day8control1.txt");
     }
 
     public Day8(String file) {
-        map = new CharacterMap(file);
+        map = new Map2D(file);
     }
 
     public int part1() {
@@ -68,7 +68,7 @@ public class Day8 extends AoCDay {
             this.nodes = points;
         }
     }
-    public static Set<Point> findAntiNodes(Antenna a, CharacterMap map, boolean scan) {
+    public static Set<Point> findAntiNodes(Antenna a, Map2D map, boolean scan) {
         logger.debug("antenna: {}",a.c);
         Set<Point> allAntiNodes = new HashSet<>();
         List<Point> checked = new ArrayList<>();
@@ -93,13 +93,13 @@ public class Day8 extends AoCDay {
                     an2.x -= xd;
                     an2.y -= yd;
                     //logger.info("checking an1: {}",an1);
-                    if (map.getChar(an1) != CharacterMap.EOF) {
+                    if (map.getChar(an1) != Map2D.EOF) {
                         logger.debug("{} anti node: {} between {} and {}", a.c, an1, point, p);
                         antiNodes.add(new Point(an1));
                         bothOob = false;
                     }
                     //logger.info("checking an2: {}",an2);
-                    if (map.getChar(an2) != CharacterMap.EOF) {
+                    if (map.getChar(an2) != Map2D.EOF) {
                         //logger.info("{} has anti node at: {}",c,an2);
                         logger.debug("{} anti node: {} between {} and {}", a.c, an2, point, p);
                         antiNodes.add(new Point(an2));

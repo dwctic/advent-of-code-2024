@@ -6,15 +6,15 @@ import java.util.List;
 /**
  * Manages a 2D map of chars
  */
-public class CharacterMap {
+public class Map2D {
 
     public static char EOF = (char) -1;
     public final char[][] map;
 
-    public CharacterMap(String resource) {
+    public Map2D(String resource) {
         this(Utilities.getLines(resource));
     }
-    public CharacterMap(List<String> lines) {
+    public Map2D(List<String> lines) {
         int y = 0;
         char[][] mapAr = new char[lines.size()][];
         for (char[] row : lines.stream().map(String::trim).map(String::toCharArray).toList()) {
