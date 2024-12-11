@@ -9,7 +9,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,16 +33,11 @@ public class Day10 {
     }
 
     public int[] walkTrails() {
-        List<Point> trailheads = map.findInt(TRAIL_HEAD);
         int score = 0;
         int rating = 0;
-        for (Point p : trailheads) {
-            logger.debug("TRAILHEAD {}",p);
-            Trail start = new Trail();
-            Set<Trail> distinct = walk(start,-1, p);
+        for (Point p : map.findInt(TRAIL_HEAD)) {
+            Set<Trail> distinct = walk(new Trail(),-1, p);
             Set<Point> reachable = distinct.stream().map(t -> t.get(t.size()-1)).collect(Collectors.toSet());
-            logger.debug("TRAILHEAD {} can reach {}",p,reachable.size());
-            logger.debug("TRAILHEAD {} distinct {}",p,distinct.size());
             rating += distinct.size();
             score += reachable.size();
         }

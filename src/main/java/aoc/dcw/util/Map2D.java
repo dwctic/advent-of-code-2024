@@ -56,12 +56,6 @@ public class Map2D {
 
     public List<Point> findInt(int i) {
         char c = Character.forDigit(i,10);
-        List<Point> points = new ArrayList<>();
-        for(int y=0;y<map.length;y++){
-            for(int x=0;x<map[y].length;x++) {
-                if(map[y][x] == c) points.add(new Point(x,y));
-            }
-        }
-        return points;
+        return findChar(c);
     }
 }
