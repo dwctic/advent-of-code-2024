@@ -77,7 +77,7 @@ public class Day13 {
     pY = a#*aY + b#*bY
 
     and solve for b# and a# where these are the number of times you must press a or b to get to the prize point
-    then check to modulo to make sure both produce a 0 on the opposite button
+    then check the modulo to make sure the opposing button gets there exactly
 
      */
     public long solveV3(Point endPoint, Point butA, Point butB, long max) {
@@ -94,11 +94,9 @@ public class Day13 {
         end.subtract(bEnd);
 
         long modX = end.x % butA.x;
-
         long modY = end.y % butA.y;
 
         long aTimes = (butB.x * endPoint.y - butB.y * endPoint.x) / (butB.x * butA.y - butB.y * butA.x);
-
 
         if(bTimes >= 0  && aTimes >= 0 && modX == 0 && modY == 0 && (max == -1 ||  (bTimes <= max && aTimes <= max))){
 
