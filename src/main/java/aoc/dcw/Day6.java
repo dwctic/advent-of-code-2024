@@ -103,7 +103,7 @@ public class Day6 extends AoCDay {
         public Set<PointAndDir> history = new LinkedHashSet<>(); // Used to know if we hit a loop
         public Set<Point> allPositions = new LinkedHashSet<>(); // Used to calculate the total number of unique positions
         public PointAndDir current;
-        public Guard(int x, int y, char c) {
+        public Guard(long x, long y, char c) {
             this.current = new PointAndDir(x, y, c);
             this.allPositions.add(current.toPoint());
             this.history.add(current);
@@ -136,7 +136,7 @@ public class Day6 extends AoCDay {
         public PointAndDir(PointAndDir pad) {
             this(pad.x, pad.y, pad.dirChar);
         }
-        public PointAndDir(int x, int y, char dir) {
+        public PointAndDir(long x, long y, char dir) {
             super(x, y);
             this.dirChar = dir;
             this.dir = getDir(dirChar);

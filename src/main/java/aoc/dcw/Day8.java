@@ -80,8 +80,8 @@ public class Day8 extends AoCDay {
             Set<Point> antiNodes = new HashSet<>();
             // Check this point against all others
             nodes.stream().filter(Predicate.not(checked::contains)).forEach(p -> {
-                int xd = p.x - point.x;
-                int yd = p.y - point.y;
+                int xd = (int) (p.x - point.x);
+                int yd = (int) (p.y - point.y);
                 Point an1 = new Point(p.x, p.y);
                 Point an2 = new Point(point.x, point.y);
 

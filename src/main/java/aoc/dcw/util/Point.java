@@ -5,10 +5,10 @@ import java.util.Objects;
 
 public class Point {
 
-    public int x;
-    public int y;
+    public long x;
+    public long y;
 
-    public Point(int x, int y) {
+    public Point(long x, long y) {
         this.x = x;
         this.y = y;
     }
@@ -18,7 +18,7 @@ public class Point {
         this.y = p.y;
     }
 
-    public int getX() {
+    public long getX() {
         return x;
     }
 
@@ -26,7 +26,7 @@ public class Point {
         this.x = x;
     }
 
-    public int getY() {
+    public long getY() {
         return y;
     }
 
@@ -34,8 +34,55 @@ public class Point {
         this.y = y;
     }
 
+    public void add(Point move){
+        this.x += move.x;
+        this.y += move.y;
+    }
+
+    public void mul(long mul){
+        this.x *= mul;
+        this.y *= mul;
+    }
+
+    public void subtract(Point move){
+        this.x -= move.x;
+        this.y -= move.y;
+    }
+
     public List<Point> cardinalDirections() {
         return List.of(new Point(x+1,y),new Point(x-1,y),new Point(x,y+1), new Point(x,y-1));
+    }
+
+    public List<Point> intercardinalDirections() {
+        return List.of(new Point(x+1,y+1),new Point(x-1,y-1),new Point(x-1,y+1), new Point(x+1,y-1));
+    }
+
+    public boolean touchingCardinal(Point p) {
+        return cardinalDirections().contains(p);
+    }
+
+    public boolean touchingIntercardinal(Point p) {
+        return intercardinalDirections().contains(p);
+    }
+
+    public boolean touching(Point p){
+        return touchingIntercardinal(p) || touchingCardinal(p);
+    }
+
+    public Point south() {
+        return new Point(x,y+1);
+    }
+
+    public Point north() {
+        return new Point(x,y-1);
+    }
+
+    public Point east() {
+        return new Point(x+1,y);
+    }
+
+    public Point west() {
+        return new Point(x-1,y);
     }
 
     @Override
@@ -54,5 +101,13 @@ public class Point {
     @Override
     public String toString() {
         return "(" + "x=" + x + ", y=" + y + ')';
+    }
+
+    public double distanceFromOrigin(){
+        return Math.sqrt(x*x + y*y);
+    }
+
+    public double distanceFrom(Point other){
+        return Math.sqrt((other.x-x)*(other.x-x) + (other.y-y)*(other.y-y));
     }
 }
