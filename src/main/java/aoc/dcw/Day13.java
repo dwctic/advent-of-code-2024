@@ -70,14 +70,19 @@ public class Day13 {
         return totalTokens;
     }
 
+    /*
+    the general solution is to take the equations implied in the question:
+
+    pX = a#*aX + b#*bX
+    pY = a#*aY + b#*bY
+
+    and solve for b# and a# where these are the number of times you must press a or b to get to the prize point
+    then check to modulo to make sure both produce a 0 on the opposite button
+
+     */
     public long solveV3(Point endPoint, Point butA, Point butB, long max) {
 
         logger.debug("solving from {} for A: {} B: {}",endPoint,butA,butB);
-
-        Point start = new Point(0,0);
-        Point current = new Point(0,0);
-        //while(current.x < endPoint.x && current.y < endPoint.y) {
-
 
         long bTimes = (butA.x * endPoint.y - butA.y * endPoint.x) / (butA.x * butB.y - butA.y * butB.x);
 
@@ -85,27 +90,15 @@ public class Day13 {
         bEnd.mul(bTimes);
         logger.info("press B {} times to {}",  bTimes, bEnd);
 
-        Point sub = new Point(endPoint.x - bTimes*butB.x, endPoint.y - bTimes*butB.y);
-        logger.info("remaining1: {}",  sub);
-
-
         Point end = new Point(endPoint);
         end.subtract(bEnd);
-        logger.info("remaining2: {}",  sub);
 
         long modX = end.x % butA.x;
-        long aTimesFromBx = end.x / butA.x;
-        logger.info("aTimesFromBx: {} modX: {}",  aTimesFromBx,modX);
 
         long modY = end.y % butA.y;
-        long aTimesFromBy = end.y / butA.y;
-        logger.info("aTimesFromBy: {} modY: {}",  aTimesFromBy,modY);
 
         long aTimes = (butB.x * endPoint.y - butB.y * endPoint.x) / (butB.x * butA.y - butB.y * butA.x);
 
-        Point aEnd = new Point(butA);
-        aEnd.mul(aTimes);
-        logger.info("press A {} times to {}",  aTimes, aEnd);
 
         if(bTimes >= 0  && aTimes >= 0 && modX == 0 && modY == 0 && (max == -1 ||  (bTimes <= max && aTimes <= max))){
 
